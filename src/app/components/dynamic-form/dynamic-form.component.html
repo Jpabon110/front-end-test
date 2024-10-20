@@ -1,0 +1,30 @@
+<h2>Selecciona un formulario:</h2>
+<mat-form-field appearance="fill">
+    <mat-label>Formulario</mat-label>
+    <mat-select (selectionChange)="onSelectForm($event.value)">
+      <mat-option *ngFor="let form of allForms" [value]="form._id">
+        {{ form.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+<h2>{{ formData?.name }}</h2>
+<p>{{ formData?.description }}</p>
+
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div *ngFor="let field of formData?.fields">
+    <mat-form-field appearance="fill">
+      <mat-label>{{ field.label }}</mat-label>
+      <input *ngIf="field.type === 'text'" matInput [id]="field.name" [formControlName]="field.name" [type]="field.type">
+    </mat-form-field>
+    <div *ngIf="field.type === 'select'">
+      <mat-select (selectionChange)="onSelectForm($event.value)">
+        <mat-option *ngFor="let val of field.values" [value]="val">
+          {{ val }}
+        </mat-option>
+      </mat-select>
+    </div>
+  </div>
+
+  <button mat-raised-button color="primary" type="submit">Submit</button>
+</form>
