@@ -69,7 +69,6 @@ export class DynamicFormComponent implements OnInit {
         this.buildForm(this.formData.fields);
         const dataById = this.formService.getAllDataFormResponse(this.allForms[0]._id).subscribe(data =>{
         this.allDataFormsResponse = data;
-          console.log("display data", this.allDataFormsResponse);
         })
       }
     });
@@ -116,6 +115,10 @@ export class DynamicFormComponent implements OnInit {
     };
   }
 
+  isDate(value: any): boolean {
+    return !isNaN(Date.parse(value));
+  }
+
   onSelectForm(formId: string): void {
     if (!formId) {
       console.error('No se ha seleccionado ningún formulario.');
@@ -128,6 +131,9 @@ export class DynamicFormComponent implements OnInit {
       this.formData = selectedForm;
       this.formGroup = this.fb.group({});
       this.buildForm(this.formData.fields);
+      this.formService.getAllDataFormResponse(formId).subscribe(data =>{
+        this.allDataFormsResponse = data;
+        })
     } else {
       console.error(`No se encontró un formulario con ID: ${formId}`);
     }
