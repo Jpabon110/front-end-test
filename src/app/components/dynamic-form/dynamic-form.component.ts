@@ -67,7 +67,7 @@ export class DynamicFormComponent implements OnInit {
         this.selectedFormId = this.allForms[0]._id;
         this.formData = this.allForms[0];
         this.buildForm(this.formData.fields);
-        const dataById = this.formService.getAllDataFormResponse(this.allForms[0]._id).subscribe(data =>{
+        this.formService.getAllDataFormResponse(this.allForms[0]._id).subscribe(data =>{
         this.allDataFormsResponse = data;
         })
       }
@@ -121,7 +121,12 @@ export class DynamicFormComponent implements OnInit {
 
   onSelectForm(formId: string): void {
     if (!formId) {
-      console.error('No se ha seleccionado ningún formulario.');
+      this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Error',
+          message: 'No se ha seleccionado ningún formulario.'
+        }
+      });
       return;
     }
 
@@ -135,7 +140,12 @@ export class DynamicFormComponent implements OnInit {
         this.allDataFormsResponse = data;
         })
     } else {
-      console.error(`No se encontró un formulario con ID: ${formId}`);
+      this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Error',
+          message: `No se encontró un formulario con ID: ${formId}`
+        }
+      });
     }
   }
 
@@ -150,7 +160,6 @@ export class DynamicFormComponent implements OnInit {
           response => {
             this.initializeForm();
             this.loadFormData();
-            console.log('Formulario enviado con éxito', response);
             this.dialog.open(DialogComponent, {
               data: {
                 title: 'Éxito',
@@ -159,18 +168,22 @@ export class DynamicFormComponent implements OnInit {
             });
           },
           error => {
-            console.error('Error al enviar el formulario', error);
             this.dialog.open(DialogComponent, {
               data: {
                 title: 'Error',
-                message: 'Hubo un error al enviar el formulario. Intenta nuevamente.'
+                message: `Hubo un error al enviar el formulario: ${error}`
               }
             });
           }
         );
       }
     } else {
-      console.log('Formulario inválido');
+      this.dialog.open(DialogComponent, {
+        data: {
+          title: 'Error',
+          message: 'Formulario inválido'
+        }
+      });
     }
   }
   
